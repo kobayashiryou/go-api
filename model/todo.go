@@ -20,9 +20,9 @@ type Todo struct {
 var openDb *gorm.DB
 
 func init() {
-	db, err := gorm.Open(mysql.Open("root:root@tcp(127.0.0.1:3306)/memodb?charset=utf8mb4&parseTime=True&loc=Local"))
+	db, err := gorm.Open(mysql.Open("root:root@tcp(goDb:3306)/memodb?charset=utf8mb4&parseTime=True&loc=Local"))
 	if err != nil {
-		panic("取得失敗")
+		panic(err)
 	}
 	openDb = db
 }

@@ -1,8 +1,30 @@
 version: '3.2'
 
 services:
+  go-api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: go run main.go
+    volumes:
+      - .:/app
+    ports:
+      - 8080:8080
+    environment:
+      MYSQL_HOST: goDb
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    entrypoint:
+      - dockerize
+      - -timeout
+      - 10s
+      - -wait
+      - tcp://db:3306
+    depends_on:
+      - db
   db:
     image: mysql:5.7.32
+    container_name: goDb
     platform: linux/x86_64
     command: >
       --character-set-server=utf8mb4
@@ -10,8 +32,10 @@ services:
     volumes:
       - mysql-datavolume:/var/lib/mysql
     environment:
-      MYSQL_DATABASE: docker_db
+      MYSQL_USER: root
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: memodb
     ports:
       - 3306:3306
 
